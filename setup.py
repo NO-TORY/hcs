@@ -1,7 +1,6 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from contextlib import closing
 
-packages = ["hcs"]
 requirements = ["pycryptodome", "requests"]
 
 with closing(open("hcs/version")) as f:
@@ -11,7 +10,7 @@ setup(
     name="py-hcs",
     version=version,
     description="자가진단 라이브러리.",
-    packages=packages,
+    packages=find_packages(),
     install_requires=requirements,
     include_package_data=True
 )
