@@ -1,7 +1,4 @@
-from .mTranskey import crypto
 from .hcs import Route
-
-Crypto = crypto.Crypto()
 
 def findUser(atptOfcdcConctUrl, birthday: str, name: str, orgCode: str, loginType: str = "school", stdntPNo = None):
     payload = {
