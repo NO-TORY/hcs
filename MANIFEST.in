@@ -1,0 +1,4 @@
+include hcs/*.py
+include hcs/version
+include hcs/constants/*.json
+include hcs/constants/*.py
