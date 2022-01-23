@@ -1,24 +1,23 @@
 from __future__ import annotations, absolute_import, unicode_literals
 
+from json import dumps
+from jwt import encode, decode
+from base64 import b64encode, b64decode
+
 from . import mTranskey
 from .hcs import *
 from .school import *
 from .user import *
-from json import dumps
+from .models import Validate, Login
+
 import hcs.constants.filter as constant_filters
 import hcs.constants.loader as constant_loaders
 
-class LoginResult:
-    def __init__(self, token, atptOfcdcConctUrl, orgCode):
-        __slots__ = (
-            "token",
-            "atptOfcdcConctUrl",
-            "orgCode"
-        )
+save_as_token = lambda name, birth, area, school_name, level, password: open("token.txt", "w").write(
+    b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
+)
 
-        self.token = token
-        self.atptOfcdcConctUrl = atptOfcdcConctUrl
-        self.orgCode = orgCode
+token_selfcheck = lambda token: selfcheck(**decode(b64decode(token), mTranskey.pubkey, algorithms="HS256"))
 
 def login(
     name: str,
@@ -34,18 +33,17 @@ def login(
     area = constant_filters.regionFilter(area)
     level = constant_filters.levelFilter(level)
 
-    school = SearchSchool(area, level, school_name)
+    school = searchSchool(area, level, school_name)
     user = findUser(school.atptOfcdcConctUrl, birth, name, school.orgCode)
-    user.response.raise_for_status()
-    password_yn = hasPassword(school.atptOfcdcConctUrl, user.response.json()["token"])
+    password_yn = hasPassword(school.atptOfcdcConctUrl, user.token)
     
-    if not password_yn:
-        raise TypeError("비밀번호가 존재하지 않습니다.")
+    assert password_yn == True, "비밀번호가 설정되지 않았습니다."
 
     mtk = mTranskey.mTransKey("https://hcs.eduro.go.kr/transkeyServlet")
     pw_pad = mtk.new_keypad("number", "password", "password", "password")
     encrypted = pw_pad.encrypt_password(password)
     hm = mtk.hmac_digest(encrypted.encode())
+
     ps = {
         "raon": [
             {
@@ -63,7 +61,7 @@ def login(
     }
 
     headers = {
-        "authorization": user.response.json()["token"],
+        "authorization": user.token,
         "content-type": "application/json"
     }
 
@@ -74,9 +72,12 @@ def login(
     }
 
     validate = Route("POST", school.atptOfcdcConctUrl, "/v2/validatePassword", headers=headers, json=payload)
-    validate.response.raise_for_status()
+    
+    token = validate.response.json()
 
-    return LoginResult(validate.response.json(), school.atptOfcdcConctUrl, school.orgCode)
+    validate = Validate(token)
+
+    return Login(token=validate.token, atptOfcdcConctUrl=school.atptOfcdcConctUrl, orgCode=school.orgCode)
 
 def selfcheck(
     name: str,
@@ -85,6 +86,7 @@ def selfcheck(
     school_name: str,
     level: str,
     password: str,
+    save_token: bool = False,
 ):
     r"""자가진단을 합니다.
     name: str | 자신의 본명
@@ -99,7 +101,7 @@ def selfcheck(
     import hcs
 
     hcs.selfcheck("홍길동", "060402", "서울", "저기고등학교", "고", "9543")
-
+    ```
     """
     login_result = login(name, birth, area, school_name, level, password)
 
@@ -115,12 +117,13 @@ def selfcheck(
     token = user_data["token"]
 
     user_info = getUserInfo(login_result.atptOfcdcConctUrl, login_result.orgCode, userPNo, token)
-    user_info.raise_for_status()
 
-    token = user_info.json()["token"]
+    token = user_info.token
 
     constant_loaders.answer["upperToken"] = token
     constant_loaders.answer["upperUserNameEncpt"] = name
 
-    servey = Route("POST", login_result.atptOfcdcConctUrl, "/registerServey", headers={"authorization": token, "content-type": "application/json"}, json=constant_loaders.answer)
-    return servey
+    Route("POST", login_result.atptOfcdcConctUrl, "/registerServey", headers={"authorization": token, "content-type": "application/json"}, json=constant_loaders.answer)
+
+    if save_token:
+        save_as_token(name, birth, area, school_name, level, password)
