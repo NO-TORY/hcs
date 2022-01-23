@@ -1,3 +1,3 @@
-from pkgutil import get_data
+from .constants.loader import from_path
 
-__version__ = get_data("hcs", "version").decode()
+__version__ = from_path("hcs", "version").decode()
