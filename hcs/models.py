@@ -20,3 +20,7 @@ class Login:
         self.token = token
         self.atptOfcdcConctUrl = atptOfcdcConctUrl
         self.orgCode = orgCode
+
+class Result:
+    def __init__(self, token):
+        self.token = token
