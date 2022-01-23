@@ -5,3 +5,6 @@
 ```shell
 pip install --upgrade py-hcs
 ```
+# dependencies
+[transkey](https://github.com/covid-hcs/transkey-py) <br/>
+[hcs-python](https://github.com/covid-hcs/hcs-python)
