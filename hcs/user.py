@@ -10,7 +10,7 @@ def findUser(atptOfcdcConctUrl, birthday: str, name: str, orgCode: str, loginTyp
         "stdntPNo": stdntPNo
     }
 
-    return FindUser(token=Route("POST", atptOfcdcConctUrl, "/v2/findUser", json=payload).response.json().get("token"))
+    return FindUser(Route("POST", atptOfcdcConctUrl, "/v2/findUser", json=payload).response.json().get("token"))
 
 def hasPassword(atptOfcdcConctUrl, token: str):
     response = Route("POST", atptOfcdcConctUrl, "/v2/hasPassword", headers={"authorization": token, "content-type": "application/json"}, json={})
@@ -23,4 +23,4 @@ def SelectUserGroup(atptOfcdcConctUrl, token: str):
     return Route("POST", atptOfcdcConctUrl, "/v2/selectUserGroup", headers={"Authorization": token, "content-type": "application/json", "X-Requested-With": "XMLHttpRequest"}, json={}).response
 
 def getUserInfo(atptOfcdcConctUrl, orgCode: str, userPNo: str, token: str):
-    return GetUserInfo(token=Route("POST", atptOfcdcConctUrl, "/v2/getUserInfo", headers={"authorization": token, "content-type": "application/json"}, json=dict(orgCode=orgCode, userPNo=userPNo)).response.json().get("token"))
+    return GetUserInfo(Route("POST", atptOfcdcConctUrl, "/v2/getUserInfo", headers={"authorization": token, "content-type": "application/json"}, json=dict(orgCode=orgCode, userPNo=userPNo)).response.json().get("token"))
