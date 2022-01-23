@@ -8,14 +8,12 @@ from . import mTranskey
 from .hcs import *
 from .school import *
 from .user import *
-from .models import Validate, Login
+from .models import Validate, Login, Result
 
 import hcs.constants.filter as constant_filters
 import hcs.constants.loader as constant_loaders
 
-save_as_token = lambda name, birth, area, school_name, level, password: open("token.txt", "w").write(
-    b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
-)
+make_token = lambda name, birth, area, school_name, level, password: b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
 
 token_selfcheck = lambda token: selfcheck(**decode(b64decode(token), mTranskey.pubkey, algorithms="HS256"))
 
@@ -72,12 +70,9 @@ def login(
     }
 
     validate = Route("POST", school.atptOfcdcConctUrl, "/v2/validatePassword", headers=headers, json=payload)
-    
     token = validate.response.json()
-
     validate = Validate(token)
-
-    return Login(token=validate.token, atptOfcdcConctUrl=school.atptOfcdcConctUrl, orgCode=school.orgCode)
+    return Login(validate.token, school.atptOfcdcConctUrl, school.orgCode)
 
 def selfcheck(
     name: str,
@@ -106,7 +101,6 @@ def selfcheck(
     login_result = login(name, birth, area, school_name, level, password)
 
     user_group = SelectUserGroup(login_result.atptOfcdcConctUrl, login_result.token)
-    user_group.raise_for_status()
     user_data = {}
 
     for user in user_group.json():
@@ -126,4 +120,6 @@ def selfcheck(
     Route("POST", login_result.atptOfcdcConctUrl, "/registerServey", headers={"authorization": token, "content-type": "application/json"}, json=constant_loaders.answer)
 
     if save_token:
-        save_as_token(name, birth, area, school_name, level, password)
+        open("token.txt", "w").write(make_token(name, birth, area, school_name, level, password))
+
+    return Result(make_token(name, birth, area, school_name, level, password))
