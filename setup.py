@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from contextlib import closing
 
-requirements = ["pycryptodome", "requests"]
+requirements = ["pycryptodome", "requests", "pyjwt"]
 
 with closing(open("hcs/version")) as f:
     version = f.read()
