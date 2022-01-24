@@ -1,7 +1,7 @@
 from .hcs import Route
 from .models import SearchSchool
 
-def searchSchool(lctnScCode: str, schulCrseScCode: str, orgName: str, loginType: str = "school"):
+def searchSchool(lctnScCode, schulCrseScCode, orgName, loginType = "school"):
     response = Route("GET", "https://hcs.eduro.go.kr", f"/v2/searchSchool?lctnScCode={lctnScCode}&schulCrseScCode={schulCrseScCode}&orgName={orgName}&loginType={loginType}")
         
     if len(response.response.json()["schulList"]) > 1:
