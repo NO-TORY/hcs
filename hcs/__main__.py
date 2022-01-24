@@ -1,6 +1,14 @@
 from __future__ import annotations, absolute_import, unicode_literals
 
-from json import dumps
+fast = True
+
+try:
+    from orjson import dumps
+except:
+    from json import dumps
+
+    fast = False
+
 from jwt import encode, decode
 from base64 import b64encode, b64decode
 
@@ -64,7 +72,7 @@ def login(
     }
 
     payload = {
-        "password": dumps(ps),
+        "password": dumps(ps).decode() if fast else dumps(ps),
         "deviceUuid": "",
         "makeSession": True
     }
@@ -105,7 +113,8 @@ def selfcheck(
 
     for user in user_group.json():
         if user["otherYn"] == "N":
-            user_data = user; break
+            user_data = user
+            break
 
     userPNo = user_data["userPNo"]
     token = user_data["token"]
