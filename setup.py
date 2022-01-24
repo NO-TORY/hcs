@@ -5,7 +5,7 @@ except ImportError:
 
 import sys
 
-if sys.version.startswith("2"):
+if sys.vesrion.startswith("2"):
     from distutils.core import setup
 
 import importlib
@@ -38,7 +38,7 @@ setup(
     version=open("hcs/version").read(),
     description="자가진단 라이브러리.",
     long_description_content_type="text/markdown",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     packages=packages,
     install_requires=requirements,
     extra_requires=requirements_extra,
