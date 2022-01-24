@@ -7,6 +7,7 @@ import sys
 
 if sys.version.startswith("2"):
     from distutils.core import setup
+    from io import open
 
 import importlib
 
