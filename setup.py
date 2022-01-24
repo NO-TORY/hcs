@@ -1,16 +1,41 @@
-from setuptools import setup, find_packages
-from contextlib import closing
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+import importlib
 
 requirements = ["pycryptodome", "requests", "pyjwt"]
+requirements_extra = {
+    "fast": [
+        "orjson>=3.5.4"
+    ]
+}
+import_checks = ["hashlib", "hmac", "typing_extensions"]
+packages = [
+    "hcs",
+    "hcs.mTranskey"
+]
 
-with closing(open("hcs/version")) as f:
-    version = f.read()
+def check_imports():
+    global import_checks
+
+    for imports in import_checks:
+        try:
+            importlib.import_module(imports)
+        except:
+            requirements.append(import_checks)
+
+check_imports()
 
 setup(
     name="py-hcs",
-    version=version,
+    version=open("hcs/version").read(),
     description="자가진단 라이브러리.",
-    packages=find_packages(),
+    long_description_content_type="text/markdown",
+    long_description=open("README.md").read(),
+    packages=packages,
     install_requires=requirements,
+    extra_requires=requirements_extra,
     include_package_data=True
 )
