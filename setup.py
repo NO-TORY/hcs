@@ -3,6 +3,11 @@ try:
 except ImportError:
     from distutils.core import setup
 
+import sys
+
+if sys.version.startswith("2"):
+    from distutils.core import setup
+
 import importlib
 
 requirements = ["pycryptodome", "requests", "pyjwt"]
