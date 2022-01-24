@@ -5,7 +5,7 @@ except ImportError:
 
 import sys
 
-if sys.vesrion.startswith("2"):
+if sys.version.startswith("2"):
     from distutils.core import setup
 
 import importlib
