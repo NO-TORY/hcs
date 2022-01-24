@@ -3,13 +3,8 @@ try:
 except ImportError:
     from distutils.core import setup
 
-import sys
-
-if sys.version.startswith("2"):
-    from distutils.core import setup
-    from io import open
-
-import importlib
+import sys, importlib
+from pip import __version__
 
 requirements = ["pycryptodome", "requests", "pyjwt"]
 requirements_extra = {
@@ -17,11 +12,15 @@ requirements_extra = {
         "orjson>=3.5.4"
     ]
 }
-import_checks = ["hashlib", "hmac", "typing_extensions"]
+import_checks = ["typing_extensions"]
 packages = [
     "hcs",
     "hcs.mTranskey"
 ]
+
+if sys.version.startswith("2"):
+    from distutils.core import setup
+    from io import open
 
 def check_imports():
     global import_checks
