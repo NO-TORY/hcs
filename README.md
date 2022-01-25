@@ -26,4 +26,5 @@ hcs.token_selfcheck("토큰")
 
 # TODOS
 ValidatePassword 기능을 함수로 만들기 <br/>
-Token 생성 클래스 만들기
+Token 생성 클래스 만들기 <br/>
+mTranskey에서 세션 대신 Route를 사용하는 방식으로 변경하기
