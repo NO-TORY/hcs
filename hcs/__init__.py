@@ -8,7 +8,3 @@ from .__main__ import (
 )
 from .const import __version__
 from . import constants
-from sys import version
-
-if version.startswith("2"):
-    from .py2utils import selfcheck_from_json
