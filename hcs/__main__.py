@@ -32,11 +32,11 @@ def make_token(name, birth, area, school_name, level, password):
 
 def load_from_token_file(file):
     # type: ("StrOrBytesPath") -> Dict[str, str]
-    return decode(b64decode(open(file).read()), mTranskey.pubkey, algorithms="HS256")
+    return decode(b64decode(open(file).read()).decode(), mTranskey.pubkey, algorithms="HS256")
 
 def load_from_token(token):
     # type: (str) -> dict[str]
-    return decode(b64decode(token), mTranskey.pubkey, algorithms="HS256")
+    return decode(b64decode(token).decode(), mTranskey.pubkey, algorithms="HS256")
 
 token_selfcheck = lambda token: selfcheck(**load_from_token(token))
 
