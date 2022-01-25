@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 fast = True
 
 try:
@@ -12,7 +14,6 @@ from base64 import b64encode, b64decode
 
 from . import mTranskey
 from .hcs import *
-from .school import *
 from .user import *
 from .models import Validate, Login, Result
 
@@ -23,6 +24,9 @@ from sys import version
 
 if version.startswith("2"):
     from io import open
+    from .school_py2 import *
+else:
+    from .school import *
 
 make_token = lambda name, birth, area, school_name, level, password: b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
 load_from_token_file = lambda file: decode(b64decode(open(file).read()), mTranskey.pubkey, algorithms="HS256")
