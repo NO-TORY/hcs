@@ -20,11 +20,15 @@ from .models import Validate, Login, Result
 from .constants import filter as constant_filters
 from .constants import loader as constant_loaders
 
-from sys import version
+import sys
+from importlib import reload
 
-if version.startswith("2"):
+if sys.version.startswith("2"):
     from io import open
     from .school_py2 import *
+
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
 else:
     from .school import *
 
