@@ -5,7 +5,4 @@ from .__main__ import (
     load_from_token_file,
 )
 from .const import __version__
-from sys import version
-
-if int(version[0]) <= 2:
-    from . import constants
+from . import constants
