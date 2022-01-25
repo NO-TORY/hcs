@@ -6,7 +6,7 @@ except:
     from typing_extensions import Final
 
 from_path = lambda package, path: get_data(package, path)
-json_decode = lambda data: loads(data.decode())
+json_decode = lambda data: loads(data.decode("utf-8"))
 
 levels = json_decode(from_path("hcs.constants.loader", "levels.json")) # type: Final[dict]
 regions = json_decode(from_path("hcs.constants.loader", "regions.json")) # type: Final[dict]
