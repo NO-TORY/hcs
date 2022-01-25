@@ -1,9 +1,10 @@
 from pkgutil import get_data
-from json import loads
 try:
-    from typing import Final
+    from orjson import loads # type: ignore
 except:
-    from typing_extensions import Final
+    from json import loads
+
+from typing import Final
 
 from_path = lambda package, path: get_data(package, path)
 json_decode = lambda data: loads(data.decode("utf-8"))
