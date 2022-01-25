@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pkgutil import get_data
 from json import loads
 try:
