@@ -9,6 +9,14 @@ from Crypto.PublicKey import RSA
 
 from . import seed
 
+try:
+    from typing import TYPE_CHECKING
+except:
+    from typing_extensions import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from _typeshed import Self
+
 pubkey = (
     "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA81dCnCKt0NVH7j5Oh2"
     "+SGgEU0aqi5u6sYXemouJWXOlZO3jqDsHYM1qfEjVvCOmeoMNFXYSXdNhflU7mjWP8jWUmkYIQ8o3FGqMzsMTNxr"
@@ -51,7 +59,8 @@ class Crypto:
     def get_encrypted_key(self):
         return self.rsa_encrypt(self.genSessionKey.encode())
 
-    def hmac_digest(self, msg: bytes):
+    def hmac_digest(self, msg):
+        # type: ("Self", bytes) -> str
         return hmac.new(
             msg=msg, key=self.genSessionKey.encode(), digestmod=hashlib.sha256
         ).hexdigest()
