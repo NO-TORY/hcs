@@ -11,10 +11,7 @@ from Crypto.PublicKey import RSA
 
 from . import seed
 
-try:
-    from typing import TYPE_CHECKING
-except:
-    from typing_extensions import TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from _typeshed import Self
