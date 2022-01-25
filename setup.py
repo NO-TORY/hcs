@@ -5,6 +5,7 @@ try:
 except:
     from distutils.core import setup
 
+from io import open
 import sys
 
 requirements = [
