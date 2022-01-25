@@ -6,32 +6,19 @@ except:
     from distutils.core import setup
 
 from io import open
-import sys
 
-requirements = [
-    "pycryptodome",
-    "pyjwt",
-    "requests"
-]
+requirements = open("requirements.txt", encoding="utf-8").read().splitlines()
+
 requirements_extra = {
     "fast": [
         "orjson>=3.5.4"
     ]
 }
+
 packages = [
     "hcs",
     "hcs.mTranskey"
 ]
-
-VERSION_INFO = sys.version_info
-VERSION_INFO_TUPLE = (VERSION_INFO.major, VERSION_INFO.minor, VERSION_INFO.micro)
-
-IS_PY2 = VERSION_INFO.major <= 2
-IS_PY34 = VERSION_INFO.major == 3 and VERSION_INFO.minor <= 4
-
-if IS_PY2 or IS_PY34:
-    requirements.append("future-fstrings")
-    requirements.append("typing")
 
 setup(
     name="py-hcs",
