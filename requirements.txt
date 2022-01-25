@@ -1,0 +1,5 @@
+requests
+pyjwt
+pycryptodome
+typing; python_version < "3.5"
+future-fstrings; python_version < "3.6"
