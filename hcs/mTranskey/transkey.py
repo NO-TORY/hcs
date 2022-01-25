@@ -5,6 +5,14 @@ from . import crypto
 from .keypad import KeyPad
 from requests import Session
 
+try:
+    from typing import TYPE_CHECKING
+except:
+    from typing_extensions import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from _typeshed import Self
+
 class mTransKey:
     def __init__(self, servlet_url):
         self.servlet_url = servlet_url
@@ -22,17 +30,20 @@ class mTransKey:
         self._get_public_key(SESSION)
         self._get_key_info(SESSION)
 
-    def _get_token(self, session: Session):
+    def _get_token(self, session):
+        # type: (Self, Session) -> None
         with session.get("{}?op=getToken".format(self.servlet_url)) as resp:
             txt = resp.text
             self.token = re.findall("var TK_requestToken=(.*);", txt)[0]
 
-    def _get_init_time(self, session: Session):
+    def _get_init_time(self, session):
+        # type: (Self, Session) -> None
         with session.get("{}?op=getInitTime".format(self.servlet_url)) as resp:
             txt = resp.text
             self.initTime = re.findall("var initTime='(.*)';", txt)[0]
 
-    def _get_public_key(self, session: Session):
+    def _get_public_key(self, session):
+        # type: (Self, Session) -> None
         with session.post(self.servlet_url, data={
                 "op": "getPublicKey",
                 "TK_requestToken": self.token
@@ -41,7 +52,8 @@ class mTransKey:
             key = resp.text
             self.crypto.set_pub_key(key)
 
-    def _get_key_info(self, session: Session):
+    def _get_key_info(self, session):
+        # type: (Self, Session) -> None
         with session.post(
             self.servlet_url,
             data={
