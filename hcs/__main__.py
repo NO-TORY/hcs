@@ -1,5 +1,3 @@
-from __future__ import annotations, absolute_import, unicode_literals
-
 fast = True
 
 try:
