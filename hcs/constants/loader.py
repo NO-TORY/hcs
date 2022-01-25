@@ -10,6 +10,6 @@ except:
 from_path = lambda package, path: get_data(package, path)
 json_decode = lambda data: loads(data.decode())
 
-levels: Final[dict] = json_decode(from_path("hcs.constants.loader", "levels.json"))
-regions: Final[dict] = json_decode(from_path("hcs.constants.loader", "regions.json"))
-answer: dict = json_decode(from_path("hcs.constants.loader", "answer.json"))
+levels = json_decode(from_path("hcs.constants.loader", "levels.json")) # type: Final[dict]
+regions = json_decode(from_path("hcs.constants.loader", "regions.json")) # type: Final[dict]
+answer = json_decode(from_path("hcs.constants.loader", "answer.json")) # type: dict
