@@ -1,6 +1,10 @@
+import sys
 from pkgutil import get_data
 from json import loads
-from typing import Final
+try:
+    from typing import Final
+except:
+    from typing_extensions import Final
 
 from_path = lambda package, path: get_data(package, path)
 json_decode = lambda data: loads(data.decode())
