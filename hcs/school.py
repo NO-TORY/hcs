@@ -11,4 +11,4 @@ def searchSchool(lctnScCode, schulCrseScCode, orgName, loginType = "school"):
     orgCode = school.get("orgCode")
     atptOfcdcConctUrl = school.get("atptOfcdcConctUrl")
 
-    return SearchSchool(atptOfcdcConctUrl=atptOfcdcConctUrl, orgCode=orgCode)
+    return SearchSchool(atptOfcdcConctUrl, orgCode)
