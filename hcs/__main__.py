@@ -17,8 +17,8 @@ from .hcs import *
 from .user import *
 from .models import Validate, Login, Result
 
-import hcs.constants.filter as constant_filters
-import hcs.constants.loader as constant_loaders
+from .constants import filter as constant_filters
+from .constants import loader as constant_loaders
 
 from sys import version
 
