@@ -1,7 +1,7 @@
 fast = True
 
 try:
-    from orjson import dumps
+    from orjson import dumps # type: ignore
 except:
     from json import dumps
 
