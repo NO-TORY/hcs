@@ -9,7 +9,7 @@ except:
 
     fast = False
 
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict, Any
 
 from jwt import encode, decode
 from base64 import b64encode, b64decode
@@ -31,12 +31,12 @@ def make_token(name, birth, area, school_name, level, password):
     return b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
 
 def load_from_token_file(file):
-    # type: ("StrOrBytesPath") -> Dict[str, str]
-    return decode(b64decode(open(file).read()).decode(), mTranskey.pubkey, algorithms="HS256")
+    # type: ("StrOrBytesPath") -> Dict[str, Any]
+    return decode(b64decode(open(file, "rb").read()), mTranskey.pubkey, algorithms="HS256")
 
 def load_from_token(token):
-    # type: (str) -> dict[str]
-    return decode(b64decode(token).decode(), mTranskey.pubkey, algorithms="HS256")
+    # type: (str) -> Dict[str, Any]
+    return decode(b64decode(token), mTranskey.pubkey, algorithms="HS256")
 
 token_selfcheck = lambda token: selfcheck(**load_from_token(token))
 
