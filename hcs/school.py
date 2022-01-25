@@ -1,3 +1,5 @@
+#-*- coding: future_fstrings -*-
+
 from .hcs import Route
 from .models import SearchSchool
 
