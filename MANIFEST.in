@@ -2,3 +2,5 @@ include hcs/*.py
 include hcs/version
 include hcs/constants/*.json
 include hcs/constants/*.py
+include README.md
+include requirements.txt
