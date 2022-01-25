@@ -28,8 +28,8 @@ if sys.version.startswith("2"):
     from io import open
     from .school_py2 import *
 
-    py2regfilter = lambda e: constant_loaders.regions[e]
-    py2levfilter = lambda e: constant_loaders.levels[e]
+    py2regfilter = lambda e: constant_loaders.regions[e.decode("utf-8")]
+    py2levfilter = lambda e: constant_loaders.levels[e.decode("utf-8")]
 
     constant_filters.levelFilter = py2levfilter
     constant_filters.regionFilter = py2regfilter
