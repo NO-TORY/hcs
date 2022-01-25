@@ -1,6 +1,6 @@
 try:
     from setuptools import setup
-except ImportError:
+except:
     from distutils.core import setup
 
 import sys, importlib
