@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 from .hcs import Route
 from .models import SearchSchool
 
