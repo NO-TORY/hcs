@@ -17,24 +17,11 @@ from base64 import b64encode, b64decode
 from . import mTranskey
 from .hcs import *
 from .user import *
+from .school import *
 from .models import Validate, Login, Result
 
 from .constants import filter as constant_filters
 from .constants import loader as constant_loaders
-
-import sys
-
-if sys.version.startswith("2"):
-    from io import open
-    from .school_py2 import *
-
-    py2regfilter = lambda e: constant_loaders.regions[e.decode("utf-8")]
-    py2levfilter = lambda e: constant_loaders.levels[e.decode("utf-8")]
-
-    constant_filters.levelFilter = py2levfilter
-    constant_filters.regionFilter = py2regfilter
-else:
-    from .school import *
 
 if TYPE_CHECKING:
     from _typeshed import StrOrBytesPath
