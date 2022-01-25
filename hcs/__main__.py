@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 
 fast = True
 
@@ -25,11 +25,6 @@ import sys
 if sys.version.startswith("2"):
     from io import open
     from .school_py2 import *
-    
-    try:
-        sys.setdefaultencoding("utf-8")
-    except:
-        raise
 else:
     from .school import *
 
