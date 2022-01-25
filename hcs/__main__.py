@@ -21,17 +21,23 @@ from .models import Validate, Login, Result
 import hcs.constants.filter as constant_filters
 import hcs.constants.loader as constant_loaders
 
-make_token = lambda name, birth, area, school_name, level, password: b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
+from sys import version
 
-token_selfcheck = lambda token: selfcheck(**decode(b64decode(token), mTranskey.pubkey, algorithms="HS256"))
+if version.startswith("2"):
+    from io import open
+
+make_token = lambda name, birth, area, school_name, level, password: b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
+load_from_token_file = lambda file: decode(b64decode(open(file).read()), mTranskey.pubkey, algorithms="HS256")
+load_from_token = lambda token: decode(b64decode(token), mTranskey.pubkey, algorithms="HS256")
+token_selfcheck = lambda token: selfcheck(**load_from_token(token))
 
 def login(
-    name: str,
-    birth: str,
-    area: str,
-    school_name: str,
-    level: str,
-    password: str,
+    name,
+    birth,
+    area,
+    school_name,
+    level,
+    password,
 ):
     name = mTranskey.encrypt(name)
     birth = mTranskey.encrypt(birth)
@@ -83,13 +89,13 @@ def login(
     return Login(validate.token, school.atptOfcdcConctUrl, school.orgCode)
 
 def selfcheck(
-    name: str,
-    birth: str,
-    area: str,
-    school_name: str,
-    level: str,
-    password: str,
-    save_token: bool = False,
+    name,
+    birth,
+    area,
+    school_name,
+    level,
+    password,
+    save_token = False,
 ):
     r"""자가진단을 합니다.
     name: str | 자신의 본명
@@ -98,6 +104,7 @@ def selfcheck(
     school_name: str | 자신의 학교 이름
     level: str | 자신의 학교 급 (예: 초, 중, 고, 특)
     password: str | 자신의 자가진단 비밀번호
+    save_token: bool | 토큰 저장 여부입니다. 토큰은 token.txt로 저장됩니다.
 
     ```py
     # 예재 코드
