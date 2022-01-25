@@ -2,10 +2,7 @@
 
 import requests
 
-try:
-    from typing import Literal, TYPE_CHECKING, Any
-except:
-    from typing_extensions import Literal, TYPE_CHECKING, Any
+from typing import Literal, TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from _typeshed import Self
