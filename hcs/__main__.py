@@ -9,6 +9,8 @@ except:
 
     fast = False
 
+from typing import TYPE_CHECKING, Dict
+
 from jwt import encode, decode
 from base64 import b64encode, b64decode
 
@@ -28,9 +30,21 @@ if sys.version.startswith("2"):
 else:
     from .school import *
 
-make_token = lambda name, birth, area, school_name, level, password: b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
-load_from_token_file = lambda file: decode(b64decode(open(file).read()), mTranskey.pubkey, algorithms="HS256")
-load_from_token = lambda token: decode(b64decode(token), mTranskey.pubkey, algorithms="HS256")
+if TYPE_CHECKING:
+    from _typeshed import StrOrBytesPath
+
+def make_token(name, birth, area, school_name, level, password):
+    # type: (str, str, str, str, str, str) -> str
+    return b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
+
+def load_from_token_file(file):
+    # type: ("StrOrBytesPath") -> Dict[str, str]
+    return decode(b64decode(open(file).read()), mTranskey.pubkey, algorithms="HS256")
+
+def load_from_token(token):
+    # type: (str) -> dict[str]
+    return decode(b64decode(token), mTranskey.pubkey, algorithms="HS256")
+
 token_selfcheck = lambda token: selfcheck(**load_from_token(token))
 
 def login(
@@ -41,6 +55,7 @@ def login(
     level,
     password,
 ):
+    # type: (str, str, str, str, str, str) -> Login
     name = mTranskey.encrypt(name)
     birth = mTranskey.encrypt(birth)
 
@@ -99,6 +114,7 @@ def selfcheck(
     password,
     save_token = False,
 ):
+    # type: (str, str, str, str, str, str, bool) -> Result
     r"""자가진단을 합니다.
     name: str | 자신의 본명
     birth: str | 자신의 생년월일 6자리
