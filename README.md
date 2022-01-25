@@ -23,3 +23,7 @@ import hcs
 
 hcs.token_selfcheck("토큰")
 ```
+
+# TODOS
+ValidatePassword 기능을 함수로 만들기 <br/>
+Token 생성 클래스 만들기
