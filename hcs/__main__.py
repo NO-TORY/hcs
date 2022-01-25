@@ -66,7 +66,7 @@ def login(
     user = findUser(school.atptOfcdcConctUrl, birth, name, school.orgCode)
     password_yn = hasPassword(school.atptOfcdcConctUrl, user.token)
     
-    assert password_yn == True, "비밀번호가 설정되지 않았습니다."
+    assert password_yn == True, "Password not set"
 
     mtk = mTranskey.mTransKey("https://hcs.eduro.go.kr/transkeyServlet")
     pw_pad = mtk.new_keypad("number", "password", "password", "password")
