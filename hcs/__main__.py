@@ -38,7 +38,7 @@ def load_from_token(token):
     # type: (str) -> Dict[str, Any]
     return decode(b64decode(token), mTranskey.pubkey, algorithms="HS256")
 
-token_selfcheck = lambda token: selfcheck(**load_from_token(token))
+token_selfcheck = lambda token: selfcheck(**token)
 
 def login(
     name,
