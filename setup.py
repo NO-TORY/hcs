@@ -20,6 +20,7 @@ packages = [
 if sys.version.startswith("2"):
     from distutils.core import setup
     from io import open
+    requirements.append("future-fstrings")
 
 def check_imports():
     global import_checks
