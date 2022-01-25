@@ -4,7 +4,6 @@ except ImportError:
     from distutils.core import setup
 
 import sys, importlib
-from pip import __version__
 
 requirements = ["pycryptodome", "requests", "pyjwt"]
 requirements_extra = {
