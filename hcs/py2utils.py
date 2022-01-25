@@ -13,5 +13,5 @@ if not version.startswith("2"):
 if TYPE_CHECKING:
     from _typeshed import StrOrBytesPath
 
-def load_from_json(file: "StrOrBytesPath"):
+def selfcheck_from_json(file: "StrOrBytesPath"):
     return selfcheck(**load(open(file, encoding="utf-8")))
