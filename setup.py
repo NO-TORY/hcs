@@ -30,5 +30,6 @@ setup(
     packages=packages,
     install_requires=requirements,
     extra_requires=requirements_extra,
-    include_package_data=True
+    include_package_data=True,
+    python_requires=">2.7,!=3.0,!=3.1"
 )
