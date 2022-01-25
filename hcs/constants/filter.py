@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from .loader import levels, regions
 
 def levelFilter(word):
