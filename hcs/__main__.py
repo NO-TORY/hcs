@@ -27,6 +27,12 @@ import sys
 if sys.version.startswith("2"):
     from io import open
     from .school_py2 import *
+
+    py2regfilter = lambda e: constant_loaders.regions[e]
+    py2levfilter = lambda e: constant_loaders.levels[e]
+
+    constant_filters.levelFilter = py2levfilter
+    constant_filters.regionFilter = py2regfilter
 else:
     from .school import *
 
