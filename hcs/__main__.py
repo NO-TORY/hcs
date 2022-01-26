@@ -10,7 +10,7 @@ from . import utils
 from .hcs import *
 from .models import Login, Result
 
-from constants import answer, regionFilter, levelFilter
+from .constants import answer, regionFilter, levelFilter
 
 if TYPE_CHECKING:
     from _typeshed import StrOrBytesPath
