@@ -69,7 +69,7 @@ def getUserInfo(atptOfcdcConctUrl, orgCode, userPNo, token):
         "userPNo": userPNo
     }
 
-    response = Route("POST", atptOfcdcConctUrl, "/v2/findUser", headers=headers, json=payload)
+    response = Route("POST", atptOfcdcConctUrl, "/v2/getUserInfo", headers=headers, json=payload)
     return GetUserInfo(response.response.json().get("token"))
 
 def validatePassword(atptOfcdcConctUrl, enc, hmac, keyIndex, seedKey, initTime, token):
