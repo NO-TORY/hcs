@@ -1,17 +1,13 @@
-#-*- coding: utf-8 -*-
+#-*- coding: future-annotations -*-
 
 import requests
 
-from typing import Literal, TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    from _typeshed import Self
+from typing import Literal, Any
 
 SESSION = requests.Session()
 
 class Route:
-    def __init__(self, method, atptOfcdcConctUrl, endpoint = "", **kwargs):
-        # type: ("Self", Literal["GET", "POST"], Any, str, Any) -> None
+    def __init__(self, method: Literal["GET", "POST"], atptOfcdcConctUrl: Any, endpoint: Any = "", **kwargs: Any):
         self.response = SESSION.request(method, atptOfcdcConctUrl + endpoint if "https://" in atptOfcdcConctUrl else "https://" + atptOfcdcConctUrl + endpoint, **kwargs)
         self.response.raise_for_status()
 
