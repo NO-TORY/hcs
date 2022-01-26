@@ -7,6 +7,11 @@ except:
 
 from io import open
 
+import re
+
+with open("hcs/__init__.py") as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+
 requirements = open("requirements.txt", encoding="utf-8").read().splitlines()
 
 requirements_extra = {
@@ -22,7 +27,7 @@ packages = [
 
 setup(
     name                          = "py-hcs",
-    version                       = open("hcs/version").read(),
+    version                       = version,
     url                           = "https://github.com/oxsixcseven/hcs",
     author                        = "노토리",
     description                   = "자가진단 라이브러리.",
