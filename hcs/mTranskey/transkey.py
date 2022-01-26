@@ -38,7 +38,7 @@ class mTransKey:
                 "op": "getPublicKey",
                 "TK_requestToken": self.token
             }
-        )
+        ).response
         key = resp.text
         self.crypto.set_pub_key(key)
 
