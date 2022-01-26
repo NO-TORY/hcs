@@ -24,26 +24,26 @@ class mTransKey:
         self._get_key_info()
 
     def _get_token(self):
-        with Route("GET", "{}?op=getToken".format(self.servlet_url)).response as resp:
-            txt = resp.text
-            self.token = re.findall("var TK_requestToken=(.*);", txt)[0]
+        resp = Route("GET", "{}?op=getToken".format(self.servlet_url)).response
+        txt = resp.text
+        self.token = re.findall("var TK_requestToken=(.*);", txt)[0]
 
     def _get_init_time(self):
-        with Route("GET", "{}?op=getInitTime".format(self.servlet_url)).response as resp:
-            txt = resp.text
-            self.initTime = re.findall("var initTime='(.*)';", txt)[0]
+        resp = Route("GET", "{}?op=getInitTime".format(self.servlet_url)).response
+        txt = resp.text
+        self.initTime = re.findall("var initTime='(.*)';", txt)[0]
 
     def _get_public_key(self):
-        with Route("POST", self.servlet_url, data={
+        resp = Route("POST", self.servlet_url, data={
                 "op": "getPublicKey",
                 "TK_requestToken": self.token
             }
-        ) as resp:
-            key = resp.text
-            self.crypto.set_pub_key(key)
+        )
+        key = resp.text
+        self.crypto.set_pub_key(key)
 
     def _get_key_info(self):
-        with Route(
+        resp = Route(
             "POST",
             self.servlet_url,
             data={
@@ -54,23 +54,23 @@ class mTransKey:
                 "TK_requestToken": self.token,
                 "mode": "common",
             },
-        ).response as resp:
-            key_data = resp.text
-            qwerty, num = key_data.split("var number = new Array();")
+        ).response
+        key_data = resp.text
+        qwerty, num = key_data.split("var number = new Array();")
 
-            qwerty_keys = []
-            number_keys = []
+        qwerty_keys = []
+        number_keys = []
 
-            for p in qwerty.split("qwertyMobile.push(key);")[:-1]:
-                points = re.findall("key\.addPoint\((\d+), (\d+)\);", p)
-                qwerty_keys.append(points[0])
+        for p in qwerty.split("qwertyMobile.push(key);")[:-1]:
+            points = re.findall("key\.addPoint\((\d+), (\d+)\);", p)
+            qwerty_keys.append(points[0])
 
-            for p in num.split("number.push(key);")[:-1]:
-                points = re.findall("key\.addPoint\((\d+), (\d+)\);", p)
-                number_keys.append(points[0])
+        for p in num.split("number.push(key);")[:-1]:
+            points = re.findall("key\.addPoint\((\d+), (\d+)\);", p)
+            number_keys.append(points[0])
 
-            self.qwerty = qwerty_keys
-            self.number = number_keys
+        self.qwerty = qwerty_keys
+        self.number = number_keys
 
     def new_keypad(self, key_type, name, inputName, fieldType="password"):
         self._get_data()
@@ -97,7 +97,7 @@ class mTransKey:
         ).response
         self.keyIndex = key_index_res.text
 
-        with Route(
+        resp = Route(
             "POST",
             self.servlet_url,
             data={
@@ -117,11 +117,11 @@ class mTransKey:
                 "dummy": "undefined",
                 "talkBack": "true",
             },
-        ).response as resp:
-            skip_data = resp.text
-            skip = skip_data.split(",")
+        ).response
+        skip_data = resp.text
+        skip = skip_data.split(",")
 
-            return KeyPad(self.crypto, key_type, skip, self.number, self.initTime)
+        return KeyPad(self.crypto, key_type, skip, self.number, self.initTime)
 
     def hmac_digest(self, message):
         return self.crypto.hmac_digest(message)
