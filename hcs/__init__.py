@@ -13,4 +13,4 @@ from .constants import (
     levelFilter,
     regionFilter,
 )
-__version__ = "1.1.21dev5"
+__version__ = "1.1.21dev6"
