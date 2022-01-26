@@ -1,9 +1,6 @@
-#-*- coding: utf-8 -*-
+#-*- coding: future-annotations -*-
 
-from typing import TYPE_CHECKING, Dict, Any
-
-from jwt import encode, decode
-from base64 import b64encode, b64decode
+import jwt, base64
 
 from . import mTranskey
 from . import utils
@@ -12,34 +9,63 @@ from .models import Login, Result
 
 from .constants import answer, regionFilter, levelFilter
 
+from typing import TYPE_CHECKING, Any
+
 if TYPE_CHECKING:
     from _typeshed import StrOrBytesPath
 
-def make_token(name, birth, area, school_name, level, password):
-    # type: (str, str, str, str, str, str) -> str
-    return b64encode(encode({"name": name, "birth": birth, "area": area, "school_name": school_name, "level": level, "password": password}, mTranskey.pubkey).encode()).decode()
+class Token:
+    def __init__(
+        self,
+        name: Any,
+        birth: Any,
+        area: Any,
+        school_name: Any,
+        level: Any,
+        password: Any
+    ):
+        self.payload = {
+            "name": name,
+            "birth": birth,
+            "area": area,
+            "school_name": school_name,
+            "level": level,
+            "password": password
+        }
 
-def _load_from_token_file(file):
-    # type: ("StrOrBytesPath") -> Dict[str, Any]
-    return decode(b64decode(open(file, "rb").read()), mTranskey.pubkey, algorithms="HS256")
-    
-def _load_from_token(token):
-    # type: (str) -> Dict[str, Any]
-    return decode(b64decode(token), mTranskey.pubkey, algorithms="HS256")
+    def make_token(self):
+        return base64.b64encode(
+            jwt.encode(self.payload, mTranskey.pubkey).encode()
+        ).decode()
 
-load_from_token = _load_from_token 
-load_from_token_file = _load_from_token_file
-token_selfcheck = lambda token: selfcheck(**token)
+    @staticmethod
+    def load_from_token(token):
+        if isinstance(token, bytes):
+            return jwt.decode(
+                base64.b64decode(token),
+                mTranskey.pubkey,
+                algorithms="HS256"
+            )
+        else:
+            return jwt.decode(
+                base64.decode(token.encode()),
+                mTranskey.pubkey,
+                algorithms="HS256"
+            )
+
+    @classmethod
+    def load_from_file(cls, file: "StrOrBytesPath"):
+        with open(file, "rb") as f:
+            return cls.load_from_token(f.read())
 
 def login(
-    name,
-    birth,
-    area,
-    school_name,
-    level,
-    password,
+    name: str,
+    birth: str,
+    area: str,
+    school_name: str,
+    level: str,
+    password: str,
 ):
-    # type: (str, str, str, str, str, str) -> Login
     name = mTranskey.encrypt(name)
     birth = mTranskey.encrypt(birth)
     area = regionFilter(area)
@@ -67,16 +93,17 @@ def login(
 
     return Login(validate.token, school.atptOfcdcConctUrl, school.orgCode)
 
+def token_selfcheck(token: Any) -> None:
+    return selfcheck(**Token.load_from_token(token))
+
 def selfcheck(
-    name,
-    birth,
-    area,
-    school_name,
-    level,
-    password,
-    save_token = False,
+    name: str,
+    birth: str,
+    area: str,
+    school_name: str,
+    level: str,
+    password: str,
 ):
-    # type: (str, str, str, str, str, str, bool) -> Result
     r"""자가진단을 합니다.
     name: str | 자신의 본명
     birth: str | 자신의 생년월일 6자리
@@ -84,7 +111,6 @@ def selfcheck(
     school_name: str | 자신의 학교 이름
     level: str | 자신의 학교 급 (예: 초, 중, 고, 특)
     password: str | 자신의 자가진단 비밀번호
-    save_token: bool | 토큰 저장 여부입니다. 토큰은 token.txt로 저장됩니다.
 
     ```py
     # 예재 코드
@@ -109,7 +135,4 @@ def selfcheck(
 
     registerServey(login_result.atptOfcdcConctUrl, answer)
 
-    if save_token:
-        open("token.txt", "w").write(make_token(name, birth, area, school_name, level, password))
-
-    return Result(make_token(name, birth, area, school_name, level, password))
+    return Result(Token(name, birth, area, school_name, level, password).make_token())
