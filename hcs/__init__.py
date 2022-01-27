@@ -3,8 +3,7 @@
 from .__main__ import (
     selfcheck,
     token_selfcheck,
-    load_from_token,
-    load_from_token_file,
+    Token,
 )
 from .constants import (
     answer,
